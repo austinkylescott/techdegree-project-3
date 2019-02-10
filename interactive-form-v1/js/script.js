@@ -44,6 +44,23 @@ $("#design").on('change', function (event) {
 let totalCost = 0;
 $checkboxes.on('change', function (event) {
 
+  //create REGEX string
+  const $timeRegex = /\w{1,}day \d{1,}\w{2}-\d{1,}\w{2}/g;
+  //Pull match
+  //IF checked and MATCH for any others
+  if(this.checked) {
+    console.log($(this).closest('label').text());
+  }
+    //THEN Deselect and disable others
+  //ELSE
+    //enable others
+
+
+
+  //ELSE
+    //enable others
+
+
   if(this.checked && this.name === 'all') {
     totalCost+=200;
   } else if (this.name === 'all') {
@@ -53,5 +70,4 @@ $checkboxes.on('change', function (event) {
   } else {
     totalCost-=100;
   }
-  console.log(totalCost);
 });
