@@ -5,16 +5,16 @@ $(document).ready(function(){
 });
 
 $("#other-title").hide();   //Hide "other" input field at start.
-$("#colors-js-puns").hide();//Hide colors when at start
+$("#colors-js-puns").hide();//Hide colors at start
 
 /*Check whether or not the "other" option is selected.
     If it is, show text input for user to enter option.
 */
 $("#title").on('change', function (event) {
   if(event.target.value === "other") {
-    $("#other-title").show();
+    $("#other-title").slideDown(100);
   } else {
-    $("#other-title").hide();
+    $("#other-title").slideUp(100);
   }
 });
 
@@ -43,31 +43,40 @@ $("#design").on('change', function (event) {
   Totals checked sessions*/
 let totalCost = 0;
 $checkboxes.on('change', function (event) {
-
-  //create REGEX string
-  const $timeRegex = /\w{1,}day \d{1,}\w{2}-\d{1,}\w{2}/g;
-  //Pull match
-  //IF checked and MATCH for any others
-  if(this.checked) {
-    console.log($(this).closest('label').text());
-  }
-    //THEN Deselect and disable others
-  //ELSE
-    //enable others
-
-
-
-  //ELSE
-    //enable others
-
-
-  if(this.checked && this.name === 'all') {
+  const selectedName = event.target.name;
+  const selectedChecked = event.target.checked;
+  
+  if(selectedName === 'all' && selectedChecked) {
     totalCost+=200;
-  } else if (this.name === 'all') {
+  } else if(selectedName === 'all'){
     totalCost-=200;
-  } else if(this.checked){
+  } else if(selectedChecked){
     totalCost+=100;
   } else {
     totalCost-=100;
   }
+  console.log("Total Cost: " + totalCost);
+
+/* REGEX MATCHING ATTEMPT - DOES NOT WORK
+  //create REGEX string
+  const $timeRegex = /\w{1,}day \d{1,}\w{2}-\d{1,}\w{2}/g;
+
+  const label = $(this).closest('label').text();
+  const selectedTime = label.match($timeRegex);
+  console.log(selectedTime);
+
+  $checkboxes.each(function () {
+    const checkLabel = $(this).closest('label').text();
+    const eventTime = checkLabel.match($timeRegex);
+    const name = checkLabel.name;
+
+    if(eventTime === selectedTime && name != 'all') {
+      console.log(checkLabel);
+      console.log(checkLabel + eventTime);
+      this.disabled = true;
+    } else {
+      this.disabled = false;
+    }
+  });
+*/
 });
