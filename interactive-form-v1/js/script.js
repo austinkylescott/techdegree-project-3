@@ -43,9 +43,15 @@ $("#design").on('change', function (event) {
   Totals checked sessions*/
 let totalCost = 0;
 $checkboxes.on('change', function (event) {
-  const selectedName = event.target.name;
-  const selectedChecked = event.target.checked;
+  const $timeRegex = /\w{1,}day \d{1,}\w{2}-\d{1,}\w{2}/g;
+  const selectedBox = this;
+  const selectedName = selectedBox.name;
+  const selectedChecked = selectedBox.checked;
+  const selectedLabel = $(selectedBox).closest('label').text();
+  const selectedTime = selectedLabel.match($timeRegex);
+
   
+
   if(selectedName === 'all' && selectedChecked) {
     totalCost+=200;
   } else if(selectedName === 'all'){
