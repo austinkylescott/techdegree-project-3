@@ -87,10 +87,11 @@ $checkboxes.on('change', function (event) {
 
     /*Checks to see if Total Cost element element exists.
       Adds to DOM if not, or replaces existing one if it there already*/
+    const costString = "<p id='totalCost'><b>Total Cost: $" + totalCost+"</p><b>";
     if($('#totalCost').length){
-      $('.activities #totalCost').replaceWith("<p id=totalCost><b>Total Cost: " + totalCost+"</p><b>");
+      $('.activities #totalCost').replaceWith(costString);
     } else {
-      $('.activities').append("<p id=totalCost><b>Total Cost: " + totalCost+"</p><b>");
+      $('.activities').append(costString);
     }
   }
 
@@ -157,4 +158,58 @@ $('#payment').on('change', function (event) {
   $(`#${paymentMethod}`).show();
   $(`#${paymentMethod}`).siblings('div').hide();
 
+});
+
+$('form').on('submit', function(event) {
+  //REGEX VARIABLES
+  const nameRegEx = /^[a-z ,.'-]+$/i;
+  const emailRegEx = /[^@]+@[^@.]+\.[a-z]+$/i
+  //Ideally, 99.99% emailRegEx snippet borrowed from emailregex.com would be used
+  ///^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+
+  //VALIDATION FLAGS
+  const nameValid = nameRegEx.test($('#name').val());
+  const emailValid = emailRegEx.test($('#mail').val());;
+  const activitiesValid = $checkboxes.is(':checked');
+
+  const paymentMethod = $('#payment').val();
+
+  function checkCC(){
+    //CC REGEX VARIABLES
+    const ccNumberRegEx = /^\d{13,16}$/;
+    const zipCodeRegEx = /^\d{5}$/;
+    const cvvRegEx =/^\d{3}$/;
+
+    //CC HELPER FLAGS
+    const ccNumberValid = ccNumberRegEx.test($('#cc-num').val());
+    const zipCodeValid = zipCodeRegEx.test($('#zip').val());
+    const cvvValid = cvvRegEx.test($('#cvv').val());
+
+    return (ccNumberValid && zipCodeValid && cvvValid);
+  }
+
+  //FORM VALIDATION LOGIC
+  if(nameValid && emailValid && activitiesValid){
+      //Check payment method
+      if(paymentMethod === 'credit card'){
+        //Check CC validity
+        const ccValid = checkCC();
+
+        if(!ccValid) {
+          event.preventDefault();
+          console.log("Credit card not valid");
+          console.log("name email or activities valid");
+        } else if(ccValid){
+            console.log('credit card is valid');
+            console.log("name email or activities valid");
+            return;
+        }
+      } else {
+          return;
+      }
+  } else {
+    event.preventDefault();
+    console.log("name email or activities invalid");
+  }
 });
