@@ -186,30 +186,51 @@ $('form').on('submit', function(event) {
     const zipCodeValid = zipCodeRegEx.test($('#zip').val());
     const cvvValid = cvvRegEx.test($('#cvv').val());
 
+    //ERROR Display LOGIC
+
+    function validityDisplay(valid, target, helperClass){
+      const label = $(target).prev('label');
+      if(!valid){
+        console.log(`${target} invalid****`);
+        $(target).css('border-color','maroon');
+        label.css('border-color','maroon');
+
+        //IF Error already on display, don't display another
+        if(($(helperClass)).length == 0){
+          $(target).parent().append(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid.<br><br></p>`).css('color','maroon');
+        }
+
+      } else {  //When valid, revert styles and clear error message
+        $(target).css('border-color','#000');
+        label.css('border-color','#000');
+        $(`p .${helperClass}`).remove();
+      }
+    }
+
+    validityDisplay(ccNumberValid,'#cc-num','ccInvalid');
+    validityDisplay(zipCodeValid,'#zip','zipInvalid');
+    validityDisplay(cvvValid,'#cvv','cvvInvalid');
+
     return (ccNumberValid && zipCodeValid && cvvValid);
   }
 
   //FORM VALIDATION LOGIC
-  if(nameValid && emailValid && activitiesValid){
-      //Check payment method
-      if(paymentMethod === 'credit card'){
-        //Check CC validity
-        const ccValid = checkCC();
-
-        if(!ccValid) {
-          event.preventDefault();
-          console.log("Credit card not valid");
-          console.log("name email or activities valid");
-        } else if(ccValid){
-            console.log('credit card is valid');
-            console.log("name email or activities valid");
-            return;
-        }
-      } else {
-          return;
-      }
-  } else {
+  if(!(nameValid && emailValid && activitiesValid)){
     event.preventDefault();
-    console.log("name email or activities invalid");
+  }
+
+  //CHECK CC VALIDITY
+  //Check payment method
+  if(paymentMethod === 'credit card'){
+    //Check CC validity
+    const ccValid = checkCC();
+
+    if(!ccValid) {
+      event.preventDefault();
+    } else if(ccValid){
+        return;
+    }
+  } else {
+      return;
   }
 });
