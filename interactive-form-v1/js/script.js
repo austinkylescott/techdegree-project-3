@@ -175,6 +175,27 @@ $('form').on('submit', function(event) {
 
   const paymentMethod = $('#payment').val();
 
+  //ERROR Display LOGIC
+  function validityDisplay(valid, target, helperClass){
+    const label = $(target).prev('label');
+    if(!valid){
+      console.log(`${target} invalid****`);
+      $(target).css('border-color','maroon');
+      label.css('border-color','maroon');
+
+      //IF Error already on display, don't display another
+      if(($(helperClass)).length == 0){
+        $(target).after(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid.<br><br></p>`);
+        $(target).next('p').css('color','maroon');
+      }
+
+    } else {  //When valid, revert styles and clear error message
+      $(target).css('border-color','#000');
+      label.css('border-color','#000');
+      $(`p .${helperClass}`).remove();
+    }
+  }
+
   function checkCC(){
     //CC REGEX VARIABLES
     const ccNumberRegEx = /^\d{13,16}$/;
@@ -186,26 +207,7 @@ $('form').on('submit', function(event) {
     const zipCodeValid = zipCodeRegEx.test($('#zip').val());
     const cvvValid = cvvRegEx.test($('#cvv').val());
 
-    //ERROR Display LOGIC
 
-    function validityDisplay(valid, target, helperClass){
-      const label = $(target).prev('label');
-      if(!valid){
-        console.log(`${target} invalid****`);
-        $(target).css('border-color','maroon');
-        label.css('border-color','maroon');
-
-        //IF Error already on display, don't display another
-        if(($(helperClass)).length == 0){
-          $(target).parent().append(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid.<br><br></p>`).css('color','maroon');
-        }
-
-      } else {  //When valid, revert styles and clear error message
-        $(target).css('border-color','#000');
-        label.css('border-color','#000');
-        $(`p .${helperClass}`).remove();
-      }
-    }
 
     validityDisplay(ccNumberValid,'#cc-num','ccInvalid');
     validityDisplay(zipCodeValid,'#zip','zipInvalid');
@@ -213,6 +215,10 @@ $('form').on('submit', function(event) {
 
     return (ccNumberValid && zipCodeValid && cvvValid);
   }
+
+  validityDisplay(nameValid,'#name','nameInvalid');
+  validityDisplay(emailValid,'#mail','emailInvalid');
+  validityDisplay(activitiesValid,'#activities','activitiesInvalid');
 
   //FORM VALIDATION LOGIC
   if(!(nameValid && emailValid && activitiesValid)){
