@@ -185,7 +185,7 @@ $('form').on('submit', function(event) {
 
       //IF Error already on display, don't display another
       if(($(target).next('p')).length == 0){
-        $(target).after(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid.<br><br></p>`);
+        $(target).after(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid. </p>`);
         $(target).next('p').css('color','maroon');
       }
 
