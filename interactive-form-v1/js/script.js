@@ -184,7 +184,7 @@ $('form').on('submit', function(event) {
       label.css('border-color','maroon');
 
       //IF Error already on display, don't display another
-      if(($(helperClass)).length == 0){
+      if(($(target).next('p')).length == 0){
         $(target).after(`<p class=${helperClass}'>${label.text().slice(0,-1)} is invalid.<br><br></p>`);
         $(target).next('p').css('color','maroon');
       }
@@ -192,7 +192,7 @@ $('form').on('submit', function(event) {
     } else {  //When valid, revert styles and clear error message
       $(target).css('border-color','#000');
       label.css('border-color','#000');
-      $(`p .${helperClass}`).remove();
+      $(target).next('p').remove();
     }
   }
 
